@@ -32,7 +32,7 @@ Open with your favorite browser like Chrome or Mozilla
 login with username and password :
 ```txt
 username: admin
-password: password
+password: admin
 ```
 
 ### Create New Realm in Keycloak

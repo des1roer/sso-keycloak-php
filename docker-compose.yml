@@ -16,20 +16,21 @@ services:
       - keycloak_sso_vol:/var/lib/postgresql/data
 
   keycloak:
-    image: jboss/keycloak:7.0.1
+    image: 'quay.io/keycloak/keycloak:${KC_VERSION}'
     hostname: keycloak
     environment:
-      - DB_VENDOR=${DB_VENDOR}
-      - DB_ADDR=${DB_ADDR}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_SCHEMA=${DB_SCHEMA}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - PROXY_ADDRESS_FORWARDING=${PROXY_ADDRESS_FORWARDING}
-      - KEYCLOAK_LOGLEVEL=${KEYCLOAK_LOGLEVEL}
-      - KEYCLOAK_USER=${KEYCLOAK_USER}
-      - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak_db_sso:5432/${POSTGRES_DB}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HOSTNAME_STRICT: 'false'
+      KC_HOSTNAME_STRICT_HTTPS: 'false'
+      # DB_SCHEMA: public
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+      #JDBC_PARAMS: "ssl=true"
+    command: start-dev
     networks:
       service_sso_net:
     ports:

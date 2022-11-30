@@ -30,14 +30,31 @@
                 </div>
             </div>
         </div>
-        <script src="http://localhost:2080/auth/js/keycloak.js"></script>
+        <script src="keycloak.19.0.3.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
         <script type="text/javascript">
-            const keycloak = Keycloak('http://localhost:3000/keycloak.json')
+            const keycloak = Keycloak(
+                {
+                    "realm": "master",
+                    "url": "http://localhost:2080",
+                    "clientId": "same"
+                }
+            )
+            // console.log(keycloak)
+            console.log(          keycloak.url)
+
+            // keycloak.init({
+            //     onLoad: 'login-required',
+            //     checkLoginIframe: false,
+            // }).then(function (authenticated) {
+            //     alert(authenticated ? 'authenticated' : 'not authenticated');
+            // }).catch(function() {
+            //     alert('failed to initialize');
+            // });
             const initOptions = {
-                responseMode: 'fragment',
-                flow: 'standard',
-                onLoad: 'login-required'
+                // responseMode: 'fragment',
+                onLoad: 'login-required',
+                checkLoginIframe: false,
             };
             function logout(){
                 Cookies.remove('token');
@@ -45,6 +62,7 @@
                 keycloak.logout();
             }
             keycloak.init(initOptions).success(function(authenticated) {
+                console.log( keycloak.token)
                 Cookies.set('token', keycloak.token);
                 Cookies.set('callback',JSON.stringify(keycloak.tokenParsed.resource_access.php_service.permission));
                 var arr = JSON.parse(Cookies.get('callback'));
